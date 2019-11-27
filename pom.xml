@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.egrand.wfw</groupId>
+        <artifactId>egrand-wfw-parent</artifactId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.egrand.wfw</groupId>
+    <artifactId>egrand-wfw</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>egrand-wfw-eureka</module>
+        <module>egrand-wfw-admin</module>
+        <module>egrand-wfw-config</module>
+        <module>egrand-wfw-turbine</module>
+        <module>egrand-wfw-zipkin</module>
+        <module>egrand-wfw-auth</module>
+        <module>egrand-wfw-auth-api</module>
+        <module>egrand-wfw-zuul</module>
+        <module>egrand-wfw-oauth2</module>
+        <module>egrand-wfw-oauth2-api</module>
+        <module>egrand-wfw-oauth2-user</module>
+    </modules>
+
+    <properties>
+        <de.codecentric>1.5.7</de.codecentric>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.egrand.wfw</groupId>
+                <artifactId>egrand-wfw-auth-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.egrand.commons</groupId>
+                <artifactId>egrand-commons-lang</artifactId>
+                <version>1.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.egrand.wfw</groupId>
+                <artifactId>egrand-wfw-component-cache4redis</artifactId>
+                <version>1.1-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <url>http://192.168.109.128:8081/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <url>http://192.168.109.128:8081/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</project>

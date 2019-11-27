@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>首页登录</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/login.css" />
+	<script src="/static/assets/jquery-2.0.3.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/js/alertTips.js"></script>
+</head>
+
+<body class="loginBody">
+	<header class="hyhtContainer-header">
+		<img class="hyhtContainer-header_logo" src="/static/images/logo.png" />
+		<span class="hyhtContainer-header_span2">
+			<img src="/static/images/icon_bz.png" alt="">帮助
+		</span>
+	</header>
+	<section class="hyhtContainer-section">
+		<div class="hyhtContainer-section_title">
+			<h1>统一 高效 便捷</h1>
+			<h3>—— 一站式高效工作平台</h3>
+		</div>
+		<div class="hyhtContainer-section_form">
+			<div class="hyhtContainer-section_formTitle">
+				欢迎您登陆
+			</div>
+			<div class="hyhtContainer-section_contentForm">
+				<div class="loginStyle">
+					<li class="loginOne"  onclick="userPassword()"><a href="#" id="userPassword">账号密码登录</a></li>
+					<li class="loginTwo"  onclick="phoneCode()"><a href="#" id="phoneCode">短信快捷登录</a></li>
+				</div>
+				<div class="styleModule">
+					<div class="usernamePassword" id="usernamePassword">
+						<div class="hyhtContainer-section_contentForm__group">
+							<i class="hyhtContainer-section_contentForm__yonghuImg">
+								<img src="/static/images/yonghu.png" alt="">
+							</i>
+							<input type="email" class="form-input" id="userName" placeholder="用户" oninput="reStyle('userName','wrongUsername')">
+							<span class="wrong-tips" id="wrongUsername">账号错误</span>
+						</div>
+						<div class="hyhtContainer-section_contentForm__group">
+							<i class="hyhtContainer-section_contentForm__yonghuImg">
+								<img src="/static/images/mima.png" alt="">
+							</i>
+							<input type="password" class="form-input" id="password" placeholder="密码" oninput="reStyle('password','wrongPassword')">
+							<i class="hyhtContainer-section_contentForm__yanjingImg">
+								<img id="hyhtContainer-eyes" onclick="changePasswordOfNum()" src="/static/images/yanjingClose.png" alt="">
+							</i>
+							<span class="wrong-tips" id="wrongPassword">密码错误</span>
+						</div>
+						<div class="hyhtContainer-section_contentForm__groupOfCheckbox">
+							<p class="section_contentForm__groupOfCheckboxP">
+								<input
+									class="hyhtContainer-section_contentForm__groupOfCheckboxInput"
+									type="checkbox"
+									id="deferIdentityChecked"
+									name="deferIdentity"
+									value="deferIdentity"
+									onclick="checkboxOnclick(this)"/>
+								<span class="section_contentForm__groupOfCheckboxPSpan">使用默认身份登录</span>
+							</p>
+						</div>
+						<div id="authentication" class="hyhtContainer-section_contentForm__group">
+							<i class="hyhtContainer-section_contentForm__yonghuImg2">
+								<img class="img3" src="/static/images/zhengju.png" alt="">
+							</i>
+							<select id="authenticationValue" name="authentication" onchange="authenticationChange()" class="form-select">
+								<!-- <option value="szs">深圳市</option>
+								<option value="gds" selected="selected">广东省</option>
+								<option value="gzs">广州市</option> -->
+							</select>
+						</div>
+					</div>
+					<div class="phoneMessagecode" id="phoneMessagecode">
+						<!- 手机号+验证码->
+						<div class="hyhtContainer-section_contentForm__group">
+							<i class="hyhtContainer-section_contentForm__yonghuImg">
+								<img src="/static/images/yonghu.png" alt="">
+							</i>
+							<input type = "phone" class="form-input" placeholder="手机号" id="mobilePhone" oninput="reStyle('mobilePhone','wrongMobilePhone')" size="25" tabindex="1" accesskey="${mobilePhoneAccessKey}" path="mobilePhone" autocomplete="off" htmlEscape="true" />
+							<span class="wrong-tips" id="wrongMobilePhone">手机号错误</span>
+						</div>
+						<div id="messageCodeModule" class="hyhtContainer-section_contentForm__group">
+							<div class="messagecode_content">
+								<i class="hyhtContainer-section_contentForm__yonghuImg">
+									<img src="/static/images/message.png" alt="">
+								</i>
+								<input type="text" class="form-middleInput" placeholder="短信验证码"  oninput="reStyle('messagecode','wrongMessageCode')" id="messagecode">
+								<input type="button" class="getCodeBtn" onclick="getMessageCode()" id="getMesCodeBtn" value="发送"></input>
+							</div>
+							<span class="wrong-tips" id="wrongMessageCode">验证码错误</span>
+						</div>
+					</div>
+				</div>
+				<button type="button" class="hyhtContainer-section_contentForm__submitBtn" onclick="submitMessages()" id="keygoin">登录</button>
+				<div class="hyhtContainer-section_form__bottom"></div>
+			</div>
+		</div>
+		<div id="pictureCode" class="pictureCodeModule">
+			<div id="securityCode" class="hyhtContainer-section_pictureCode_content">
+				<div class="securityCode_content">
+					<i class="hyhtContainer-section_contentForm__yonghuImg3">
+						<img class="img4" src="/static/images/huabankaobei.png" alt="">
+					</i>
+					<input onblur="blurCode()" class="form-shortInput" maxlength="4" id="securityCodeValue" placeholder="验证码">
+					<div class="form-shortInputPanel" id="securityCodePlate" onclick="createCode()" placeholder="验证码">
+					</div>
+					<img class="form-changeSecurityCode" onclick="createCode()" src="/static/images/huanyihuan1.png" alt="" srcset="">
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer class="hyhtContainer-footer">
+		<span>Copyright © 2017 广东省国家税务局</span>
+		<span><img src="/static/images/iphone.png" />400-820-6789</span>
+	</footer>
+	<!-- 提示容器 -->
+	<div class="hyhtContainerTipsContainer"></div>
+	<form action="/authentication/jinsan" method="post" hidden>
+		<table>
+			<tr>
+				<td>用户名:</td>
+				<td>
+					<label><input type="text" name="username" id="cur_username"/></label>
+				</td>
+			</tr>
+			<tr>
+				<td>密码:</td>
+				<td>
+					<label><input type="password" name="password" id="cur_password"/></label>
+				</td>
+			</tr>
+			<tr>
+				<td>身份:</td>
+				<td>
+					<label><input type="password" name="identity" id="cur_identity"/></label>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<button type="submit" id="cur_submit">登录</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+<script type="text/javascript">
+
+	//内容区高度动态获取
+	var bodyHeight = $("body").height();
+	var section = $(".hyhtContainer-section");
+	var sectionHeight = section.height(bodyHeight - 55 - 40); //内容块高度
+	$(window).resize(function(){
+		$(".hyhtContainer-footer").css("bottom","0");
+		$("html").css("width","100%").css("height","100%");
+		$("body").css("width","100%").css("height","100%");
+	});
+
+
+
+	createCode(); //初始化获取验证码
+	defSelectCheckboxValue(); //勾选默认身份
+
+	var code; //在全局 定义验证码
+	var errorTimes = 0; //密码输入错误次数
+	var checkboxObj = null; //checkbox对象
+	var time=60; //hhl 倒计时
+	var errorFlag = 0; // 错误标记
+	// var mesCodeIsOpen;
+	// $.post("/login/info", {method:"isSupportMes"}, function (result) {
+	// 	if (result.success) {
+	// 		mesCodeIsOpen = result.data;
+	// 	}
+	// 	if(!mesCodeIsOpen){
+	// 		$("#messageCodeModule").css("display","none");
+	// 	} else{
+	// 		$("#messageCodeModule").css("display","block");
+	// 	}
+	// });
+	var loginStyle = 1; //登录方式默认为账号密码登录，为1；短信登陆为2
+	$("#userPassword").css("color","blue");
+	$("#phoneCode").css("color","gray");
+
+	function userPassword(){
+		$("#phoneCode").css("color","gray");
+		$("#userPassword").css("color","blue");
+		$("#phoneMessagecode").css("display","none");
+		$("#usernamePassword").css("display","block");
+		$("#mobilePhone").val("");
+		$("#messagecode").val("");
+		loginStyle = 1;
+	}
+	function phoneCode(){
+		$("#userPassword").css("color","gray");
+		$("#phoneCode").css("color","blue");
+		$("#usernamePassword").css("display","none");
+		$("#phoneMessagecode").css("display","block");
+		$("#userName").val("");
+		$("#password").val("");
+		loginStyle = 2;
+	}
+
+
+	//创建验证码函数
+	function createCode(){ 
+		code = "";
+		var codeLength = 4;//验证码的长度
+		var html = ""; //验证码html
+		var color = "";
+		var fontweight = "";
+		var fontstyle ="";
+		var selectChar = new Array(0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f','g','h','i','j','k',
+		'l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');//所有候选组成验证码的字符，当然也可以用中文的
+		for(var i=0;i<codeLength;i++){ 
+			var charIndex = Math.floor(Math.random()*36);
+			code +=selectChar[charIndex];  //验证码
+			// color = randomColor(); //颜色
+			fontweight = randomFontweight(); //加粗
+			fontstyle = fontStyle(); //倾斜
+			html +='<span style="color:'+color+';font-weight:'+fontweight+';font-style:'+fontstyle+';">'+selectChar[charIndex]+'</span>'
+		}
+		// 设置验证码的显示样式，并显示
+		$("#securityCodePlate").html(html); // 显示
+		var imgBackground = "url(/static/images/beijing"+Math.floor(Math.random()*11)+".png)";
+		$("#securityCodePlate").css("background",imgBackground);
+	}
+	function randomColor(){
+		this.r = Math.floor(Math.random()*200);
+		this.g = Math.floor(Math.random()*200);
+		this.b = Math.floor(Math.random()*200);
+		this.color = "rgb("+this.r+","+this.g+","+this.b+")";
+		return color;
+	}
+	function randomFontweight(){
+		this.fontweight = Math.floor(Math.random()*901);
+		if (fontweight>300) {
+			return fontweight;
+		}else{
+			fontweight = "300";
+		}
+	}
+	function fontStyle(){
+		this.num = Math.floor(Math.random()*3);
+		if (this.num==1) {
+			return "italic";
+		}else if(this.num==2){
+			return "oblique"
+		}else{
+			return "normal"
+		}
+	}
+	
+	// 切换登录身份
+	function checkboxOnclick(checkbox){
+		checkboxObj = checkbox;
+		if (checkbox.checked){ 
+			// 使用默认身份（checkbox.checked==true已打勾)
+			$("#authentication").fadeOut();
+			$("#authentication option:selected").val("");
+		}else{
+			// 用户自定义身份
+			// 验证账号密码
+			var para = {};
+			var val1=$("#userName").val(); //账号
+			var val2=$("#password").val();  //密码
+			var result = true;
+			if (val1=="" || val2 == "") {
+				instanceAlertTips("warning","请输入账号密码获取身份数据！");
+				closeCheckBox();
+			} else {
+				// 账号密码作为参数，获取身份列表
+				para = {
+					username:val1,
+					password:val2,
+				};
+				$.post("/login/changeIdentity",para,function(result){
+					if (result.success) {
+						$("#authentication").fadeIn();
+						selectOptionsAajx(result.data);
+					}else{
+						instanceAlertTips("error","账号或密码错误，请求身份数据失败！");
+						closeCheckBox();
+					}
+				})
+			}
+		}
+	}
+	function closeCheckBox(){
+			$("#authentication").fadeOut();
+			setTimeout(function(){
+				defSelectCheckboxValue(); //勾选默认身份
+			},500)
+			return false;
+	}
+	// 勾选默认身份
+	function defSelectCheckboxValue(){
+		var state = $("#deferIdentityChecked").prop('checked');
+		$("#deferIdentityChecked").prop('checked',!state);
+	}
+	
+	// 验证机构下拉值渲染
+	function selectOptionsAajx(data){
+		$("#authenticationValue").html("");
+		// 请求下拉值
+		var optionHtml = "";
+		var optionList = data;
+		for (let i = 0; i < optionList.length; i++) {
+			const element = optionList[i];
+			if (element.selected) {
+				optionHtml += '<option selected="selected" value="'+element.id+'">'+element.identityName+'</option>'
+			}else{
+				optionHtml += '<option value="'+element.id+'">'+element.identityName+'</option>'
+			}
+		}
+		$("#authenticationValue").html(optionHtml);
+	}
+
+	// 验证身份切换下拉值
+	function authenticationChange(){
+		// console.log("下拉值value",$("#authentication option:selected").val())
+	}
+	
+	// 切换密码显示隐藏
+	function changePasswordOfNum(){
+		if ($("#password").attr("type")=="password") {
+			$("#password").attr("type","");
+			$("#hyhtContainer-eyes").attr("src","/static/images/yanjingOpen.png");
+		} else {
+			$("#password").attr("type","password");
+			$("#hyhtContainer-eyes").attr("src","/static/images/yanjingClose.png");
+		}
+	}
+
+	// 登录
+	// 登录
+	function submitMessages(){
+		var val1=$("#userName").val(); //账号
+		var val2=$("#password").val();  //密码
+		var val3=$("#authentication option:selected").val();
+		var val4=$("#mobilePhone").val();
+		var val5=$("#messagecode").val();
+		console.log("loginStyle:"+loginStyle);
+		if((loginStyle==1&&val1!=""&&val2!="")||(loginStyle==2&&val4!=""&&val5!="")) {
+			if (errorFlag != 0) {
+				instanceAlertTips("error", "请先修改红色标记部分");
+				return false;
+			}
+			if (loginStyle == 1) {
+				$.get("/login/user", {username: val1,password: val2}, function (response) {
+					if (response.success) {
+                        $("#cur_username").val(val1);
+                        $("#cur_password").val(val2);
+                        if (val3 == ""||val3==null) {
+                            val3 = response.data[0].id;
+                        }
+                        $("#cur_identity").val(val3);
+                        $("#cur_submit").click();
+						instanceAlertTips("success", "恭喜你，登录成功！")
+					} else {
+						instanceAlertTips("error", "登录失败！");
+					}
+				});
+			} else {
+				$.get("/login/info", {method:"phoneCode",mobilePhone: val4,messagecode: val5}, function (response) {
+					if (response.success) {
+						$('#cur_identity').val(response.data[0].id);
+						$('#cur_username').val(response.data[0].accountName);
+						$("#cur_submit").click();
+						instanceAlertTips("success", "恭喜你，登录成功！")
+					} else {
+						instanceAlertTips("error", "登录失败！");
+					}
+				});
+			}
+		} else{
+			if(loginStyle==1){instanceAlertTips("warning","请输入账号或密码！")}
+			else{instanceAlertTips("warning","请输入手机号或验证码！")}
+		}
+	}
+	// function submitMessages() {
+	// 	var val1 = $("#userName").val(); //账号
+	// 	var val2 = $("#password").val();  //密码
+	// 	var val3 = $("#authentication option:selected").val();
+	// 	val3 == undefined ? val3 = "" : "";
+	// 	console.log('账号:', val1, "密码:", val2, "身份:", val3)
+	// 	var val5 = $("#messagecode").val();
+	// 	if (val1 != "" && val2 != "") {
+	// 		if (val5 != "" || !mesCodeIsOpen) {
+	// 			if (errorFlag != 0) {
+	// 				instanceAlertTips("error", "请先修改红色标记部分");
+	// 				return false;
+	// 			}
+	// 			$.post("/login/info", {method:"login", username: val1, password: val2, messagecode:val5}, function (result) {
+	// 				if (result.success) {
+	// 					$("#cur_username").val(val1);
+	// 					$("#cur_password").val(val2);
+	// 					if (val3 == "") {
+	// 						val3 = result.data.data[0].id;
+	// 					}
+	// 					$("#cur_identity").val(val3);
+	// 					$("#cur_submit").click();
+	// 				} else {
+	// 					if(result.errorCode=="0007") {
+	// 						errorFlag = 2;
+	// 						wrongStyle("#messagecode","#wrongMessageCode");
+	// 					}
+	// 					instanceAlertTips("error", result.errorMsg);
+	// 				}
+	// 			})
+	// 		} else {
+	// 			instanceAlertTips("warning","请输入验证码！")
+	// 		}
+	// 	}
+	// 	else {
+	// 		instanceAlertTips("warning", "请输入账号或密码！")
+	// 	}
+	// }
+
+	// 校验验证码
+	function blurCode(){
+		if (code==$("#securityCodeValue").val()) {
+			setTimeout(function(){
+				$(".img4").attr("src","/static/images/successyanzheng.png");
+			},500)
+			setTimeout(function(){
+				$("#pictureCode").css("display","none");
+				sendMessageCode();
+				time = 59;
+				getMessageCode();
+			},1000)
+			setTimeout(function(){
+				$(".img4").attr("src","/static/images/huabankaobei.png");
+				$("#securityCodeValue").val("");
+				createCode();
+			},1500)
+		}else{
+			$(".img4").attr("src","/static/images/huabankaobei.png")
+			createCode();
+		}
+	}
+
+	// 提示文字
+	function instanceAlertTips(type,text){
+		var intGetAlertTips = $.fn.getAlertTips(); //实例化提示对象
+		intGetAlertTips.init(".hyhtContainerTipsContainer"); //传提示容器
+		intGetAlertTips.alertTips(type, text); //提示类型和文字
+	}
+
+	// 错误更改后，还原样式
+	function reStyle(id,wrongid) {
+		if (((errorFlag == 1)&&(id == "userName"))||((errorFlag == 2)&&(id == "messagecode"))||((errorFlag == 3)&&(id == "password"))){
+			$("#"+id).css("border","1px solid #D9D9D9");
+			$("#"+wrongid).css("display","none");
+			errorFlag = 0;
+		}
+	}
+	// 错误提示样式
+	function wrongStyle(id,wrongid) {
+		$(id).css("border","1px solid red");
+		$(wrongid).css("display", "block");
+	}
+
+	//登录按钮不可用
+	function disabledLogin() {
+		$("#keygoin").attr("disabled",true);
+		$("#keygoin").attr("class","hyhtContainer-section_contentForm__submitBtnDis");
+	}
+	//登录按钮可用
+	function abledLogin() {
+		$("#keygoin").attr("disabled",false);
+		$("#keygoin").attr("class","hyhtContainer-section_contentForm__submitBtn");
+	}
+	//发送按钮不可用
+	function disabledButton() {
+		//button = "#getMesCodeBtn"
+		$("#getMesCodeBtn").attr("disabled",true);
+		$("#getMesCodeBtn").attr("class","getCodeBtnDis");
+		$("#getMesCodeBtn").val("发送");
+	}
+	//发送按钮可用
+	function abledButton() {
+		$("#getMesCodeBtn").attr("disabled",false);
+		$("#getMesCodeBtn").attr("class","getCodeBtn");
+		$("#getMesCodeBtn").val("发送");
+	}
+
+	// 获取短信验证
+	function getMessageCode(){
+		if((time==0)||(time==1)) {
+			abledButton();
+			time = 60;
+			return false;
+		}else {
+			time--;
+			disabledButton();
+			$("#getMesCodeBtn").val("重新发送（"+time+"s）");
+			if(time==59) {
+				var val1=$("#mobilePhone").val(); //手机号
+				if(val1!="") {
+					$.post("/login/info",{method:"checkFirst",mobilePhone: val1}, function(res) {
+						if(res.success) {
+							console.log("首次登录");
+							sendMessageCode();
+						} else{
+							if (res.errorCode == "0000") {
+								// 弹出图片验证码
+								$("#pictureCode").css("display", "block");
+								time = 0;
+							} else {
+								instanceAlertTips("error", res.errorMsg);
+							}
+						}
+					});
+				} else{
+					instanceAlertTips("warning","请输入手机号！");
+					time = 0;
+					getMessageCode();
+					return false;
+				}
+			}
+		}
+		setTimeout(function(){
+			getMessageCode()
+		},1000)
+	}
+	function sendMessageCode() {
+		var val1=$("#mobilePhone").val(); //手机号
+		$.post("/login/info", {method:"getMessageCode",mobilePhone: val1}, function(res) {
+			// 这里的提示什么时候做，是登录后还是此时；如果是此时应该和前端倒计时做并发处理
+			if (res.success) {
+				instanceAlertTips("success", "验证码已发送，请查收");
+			} else {
+				if (res.errorCode == "0009") {
+					instanceAlertTips("warning", "验证码已发送，请耐心等待");
+				} else if (res.errorCode == "0010") {
+					instanceAlertTips("error", "发送失败");
+				} else if (res.errorCode == "0003") {
+					instanceAlertTips("warning", "该账号未填写对应手机号，请联系管理员");
+				} else {
+					instanceAlertTips("error", res.errorMsg);
+				}
+				return false;
+			}
+		});
+	}
+
+
+</script>
+
+</html>
