@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class User implements UserDetails, Serializable {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,12 +30,16 @@ public class User implements UserDetails, Serializable {
     public User() {
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+
+
+    public Long getId() {
+        return id;
     }
 
-    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getPassword() {
         return this.password;
     }
@@ -44,7 +48,6 @@ public class User implements UserDetails, Serializable {
         this.password = password;
     }
 
-    @Override
     public String getUsername() {
         return this.username;
     }
@@ -53,26 +56,11 @@ public class User implements UserDetails, Serializable {
         this.username = username;
     }
 
-    //setter getter
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public List<Role> getAuthorities() {
+        return authorities;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
+    public void setAuthorities(List<Role> authorities) {
+        this.authorities = authorities;
     }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
 }

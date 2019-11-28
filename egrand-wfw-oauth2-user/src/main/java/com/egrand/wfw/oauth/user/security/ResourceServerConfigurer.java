@@ -15,7 +15,8 @@ public class ResourceServerConfigurer extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         //配置哪些请求需要验证
         http.authorizeRequests()
-                .antMatchers("/user/registry").permitAll()
+                .antMatchers("/user/**").permitAll()
+                .antMatchers("/role/**").permitAll()
                 .anyRequest().authenticated();
     }
 

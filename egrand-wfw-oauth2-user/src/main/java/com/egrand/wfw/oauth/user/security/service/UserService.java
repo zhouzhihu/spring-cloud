@@ -20,6 +20,9 @@ public class UserService   {
         user.setPassword(hash);
         User u=userDao.save(user);
         return u;
+    }
 
+    public User findByUsername(String username){
+        return this.userDao.findByUsername(username);
     }
 }
