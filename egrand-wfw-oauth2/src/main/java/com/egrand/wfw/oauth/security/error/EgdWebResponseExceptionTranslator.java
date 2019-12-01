@@ -16,7 +16,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import java.io.IOException;
 
 
-public class MssWebResponseExceptionTranslator implements WebResponseExceptionTranslator {
+public class EgdWebResponseExceptionTranslator implements WebResponseExceptionTranslator {
 
     private ThrowableAnalyzer throwableAnalyzer = new DefaultThrowableAnalyzer();
 
@@ -34,22 +34,22 @@ public class MssWebResponseExceptionTranslator implements WebResponseExceptionTr
         ase = (AuthenticationException) throwableAnalyzer.getFirstThrowableOfType(AuthenticationException.class,
                 causeChain);
         if (ase != null) {
-            return handleOAuth2Exception(new MssWebResponseExceptionTranslator.UnauthorizedException(e.getMessage(), e));
+            return handleOAuth2Exception(new EgdWebResponseExceptionTranslator.UnauthorizedException(e.getMessage(), e));
         }
 
         ase = (AccessDeniedException) throwableAnalyzer
                 .getFirstThrowableOfType(AccessDeniedException.class, causeChain);
         if (ase instanceof AccessDeniedException) {
-            return handleOAuth2Exception(new MssWebResponseExceptionTranslator.ForbiddenException(ase.getMessage(), ase));
+            return handleOAuth2Exception(new EgdWebResponseExceptionTranslator.ForbiddenException(ase.getMessage(), ase));
         }
 
         ase = (HttpRequestMethodNotSupportedException) throwableAnalyzer.getFirstThrowableOfType(
                 HttpRequestMethodNotSupportedException.class, causeChain);
         if (ase instanceof HttpRequestMethodNotSupportedException) {
-            return handleOAuth2Exception(new MssWebResponseExceptionTranslator.MethodNotAllowed(ase.getMessage(), ase));
+            return handleOAuth2Exception(new EgdWebResponseExceptionTranslator.MethodNotAllowed(ase.getMessage(), ase));
         }
 
-        return handleOAuth2Exception(new MssWebResponseExceptionTranslator.ServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e));
+        return handleOAuth2Exception(new EgdWebResponseExceptionTranslator.ServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e));
 
     }
 

@@ -28,4 +28,13 @@ public class UserController {
         return Result.ok().setData(user);
     }
 
+    @GetMapping("findByUserId/{userId}")
+    public Result findById(@PathVariable("userId") Long userId){
+        User user =userService.findByUserId(userId);
+        if (user == null){
+            return Result.failure(100,"用户不存在");
+        }
+        return Result.ok().setData(user);
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.egrand.wfw.oauth.security.config;
 
-import com.egrand.wfw.oauth.security.error.MssWebResponseExceptionTranslator;
+import com.egrand.wfw.oauth.security.error.EgdWebResponseExceptionTranslator;
 import com.egrand.wfw.oauth.security.service.impl.UserServiceDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -81,7 +81,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     public WebResponseExceptionTranslator webResponseExceptionTranslator(){
-        return new MssWebResponseExceptionTranslator();
+        return new EgdWebResponseExceptionTranslator();
     }
 
     /**

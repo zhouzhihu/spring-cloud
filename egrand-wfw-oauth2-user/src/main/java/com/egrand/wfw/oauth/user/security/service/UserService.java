@@ -25,4 +25,8 @@ public class UserService   {
     public User findByUsername(String username){
         return this.userDao.findByUsername(username);
     }
+
+    public User findByUserId(Long userId){
+        return this.userDao.findById(userId);
+    }
 }
