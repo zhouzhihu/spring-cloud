@@ -1,6 +1,6 @@
 package com.egrand.wfw.oauth.security.controller;
 
-import com.egrand.wfw.oauth.api.vo.Result;
+import com.egrand.commons.lang.model.ApiResponse;
 import com.egrand.wfw.oauth.api.vo.UserVo;
 import com.egrand.wfw.oauth.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findByUserName", method = RequestMethod.GET)
-    public Result<UserVo> getUser(@RequestParam String username){
+    public ApiResponse<UserVo> getUser(@RequestParam String username){
         System.out.println("username = " + username);
-        Result<UserVo> userResult = this.userService.findByUsername(username);
+        ApiResponse<UserVo> userResult = this.userService.findByUsername(username);
         System.out.println("code = " + userResult.getCode());
         System.out.println("msg = " + userResult.getMsg());
         System.out.println("data = " + userResult.getData());
@@ -36,9 +36,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findByUserId", method = RequestMethod.GET)
-    public Result<UserVo> getUser(@RequestParam Long userId){
+    public ApiResponse<UserVo> getUser(@RequestParam Long userId){
         System.out.println("userId = " + userId);
-        Result<UserVo> userResult = this.userService.findByUserId(userId);
+        ApiResponse<UserVo> userResult = this.userService.findByUserId(userId);
         System.out.println("code = " + userResult.getCode());
         System.out.println("msg = " + userResult.getMsg());
         System.out.println("data = " + userResult.getData());

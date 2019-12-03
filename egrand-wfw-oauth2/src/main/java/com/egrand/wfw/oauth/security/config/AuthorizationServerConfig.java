@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -18,9 +19,14 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.sql.DataSource;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAuthorizationServer //开启授权服务的功能
@@ -34,6 +40,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
+//    @Bean
+//    public TokenStore tokenStore() {
+//        return new JwtTokenStore(jwtAccessTokenConverter());
+//    }
+//
+//    @Bean
+//    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+//        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("egrand-jwt.jks"), "wiki2012".toCharArray());
+//        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+//        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("egrand-jwt"));
+//        return converter;
+//    }
+
     @Autowired
     private UserServiceDetail userServiceDetail;
 
@@ -43,45 +62,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     RedisTokenStore redisTokenStore(){
         return new RedisTokenStore(redisConnectionFactory);
-    }
-
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        //ClientDetailsServiceConfigurer配置了客户端的一些基本信息
-//        clients.inMemory() //将客户端的信息存储在内存中
-//                .withClient("browser") //创建了一个client名为browser的客户端
-//                .authorizedGrantTypes("refresh_token", "password")//配置验证类型
-//                .scopes("ui")//配置客户端域为“ui”
-//                .and()
-//                .withClient("service-hi")
-//                .secret("123456")
-//                .authorizedGrantTypes("client_credentials", "refresh_token","password")
-//                .scopes("server");
-        clients.withClientDetails(clientDetails());
-    }
-
-    @Bean
-    public ClientDetailsService clientDetails() {
-        return new JdbcClientDetailsService(dataSource);
-    }
-
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//        JdbcTokenStore tokenStore=new JdbcTokenStore(dataSource);
-//        endpoints
-//                .tokenStore(tokenStore)
-//                .authenticationManager(authenticationManager) //WebSecurity配置好的
-//                .userDetailsService(userServiceDetail);//读取用户的验证信息
-        endpoints.tokenStore(redisTokenStore())
-                .userDetailsService(userServiceDetail)
-                .authenticationManager(authenticationManager);
-        endpoints.tokenServices(defaultTokenServices());
-        endpoints.exceptionTranslator(webResponseExceptionTranslator());//认证异常翻译
-    }
-
-    @Bean
-    public WebResponseExceptionTranslator webResponseExceptionTranslator(){
-        return new EgdWebResponseExceptionTranslator();
     }
 
     /**
@@ -98,6 +78,42 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         tokenServices.setAccessTokenValiditySeconds(60*60*12); // token有效期自定义设置，默认12小时
         tokenServices.setRefreshTokenValiditySeconds(60 * 60 * 24 * 7);//默认30天，这里修改
         return tokenServices;
+    }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.withClientDetails(clientDetails());
+    }
+
+    @Bean
+    public ClientDetailsService clientDetails() {
+        return new JdbcClientDetailsService(dataSource);
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        //redis
+        endpoints.tokenStore(redisTokenStore())
+                .userDetailsService(userServiceDetail)
+                .authenticationManager(authenticationManager);
+        endpoints.tokenServices(defaultTokenServices());
+        endpoints.exceptionTranslator(webResponseExceptionTranslator());//认证异常翻译
+        //JWT
+//        endpoints.tokenStore(tokenStore()).tokenEnhancer(jwtAccessTokenConverter()).authenticationManager(authenticationManager);
+        // 配置tokenServices参数
+//        DefaultTokenServices tokenServices = new DefaultTokenServices();
+//        tokenServices.setTokenStore(endpoints.getTokenStore());
+//        tokenServices.setSupportRefreshToken(true);
+//        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
+//        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+//        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)); // 30天
+//        endpoints.tokenServices(tokenServices);
+//        endpoints.exceptionTranslator(webResponseExceptionTranslator());//认证异常翻译
+    }
+
+    @Bean
+    public WebResponseExceptionTranslator webResponseExceptionTranslator(){
+        return new EgdWebResponseExceptionTranslator();
     }
 
     @Override

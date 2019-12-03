@@ -1,6 +1,6 @@
 package com.egrand.wfw.oauth.user.security.controller;
 
-import com.egrand.wfw.oauth.api.vo.Result;
+import com.egrand.commons.lang.model.ApiResponse;
 import com.egrand.wfw.oauth.user.security.model.Role;
 import com.egrand.wfw.oauth.user.security.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,9 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
     @GetMapping("getRoleByUserId/{userId}")
-    public Result getRoleByUserId(@PathVariable("userId") Integer userId){
+    public ApiResponse getRoleByUserId(@PathVariable("userId") Integer userId){
         List<Role> roleList = roleService.getRoleByUserId(userId);
-        return Result.ok().setData(roleList);
+        return ApiResponse.success(roleList);
     }
 
 }

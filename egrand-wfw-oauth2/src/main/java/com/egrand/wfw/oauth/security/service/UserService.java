@@ -1,6 +1,6 @@
 package com.egrand.wfw.oauth.security.service;
 
-import com.egrand.wfw.oauth.api.vo.Result;
+import com.egrand.commons.lang.model.ApiResponse;
 import com.egrand.wfw.oauth.api.vo.UserVo;
 import com.egrand.wfw.oauth.security.FeignConfig;
 import com.egrand.wfw.oauth.security.service.impl.UserServiceImpl;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(value = "service-hi", configuration = FeignConfig.class, fallback = UserServiceImpl.class)
 public interface UserService {
     @GetMapping("user/findByUsername/{username}")
-    Result<UserVo> findByUsername(@PathVariable("username") String username);
+    ApiResponse<UserVo> findByUsername(@PathVariable("username") String username);
     @GetMapping("user/findByUserId/{userId}")
-    Result<UserVo> findByUserId(@PathVariable("userId") Long userId);
+    ApiResponse<UserVo> findByUserId(@PathVariable("userId") Long userId);
 }

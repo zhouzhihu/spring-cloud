@@ -27,6 +27,7 @@
         <module>egrand-wfw-oauth2</module>
         <module>egrand-wfw-oauth2-api</module>
         <module>egrand-wfw-oauth2-user</module>
+        <module>egrand-wfw-ram</module>
     </modules>
 
     <properties>

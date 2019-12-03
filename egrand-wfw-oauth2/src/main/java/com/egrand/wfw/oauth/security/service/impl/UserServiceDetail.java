@@ -1,7 +1,6 @@
 package com.egrand.wfw.oauth.security.service.impl;
 
-import com.egrand.wfw.oauth.api.util.StatusCode;
-import com.egrand.wfw.oauth.api.vo.Result;
+import com.egrand.commons.lang.model.ApiResponse;
 import com.egrand.wfw.oauth.api.vo.RoleVo;
 import com.egrand.wfw.oauth.api.vo.UserVo;
 import com.egrand.wfw.oauth.security.service.RoleService;
@@ -31,10 +30,10 @@ public class UserServiceDetail implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("======查找用户======");
         System.out.println("userService = " + userService);
-        Result<UserVo> userResult = userService.findByUsername(username);
+        ApiResponse<UserVo> userResult = userService.findByUsername(username);
         System.out.println("code = " + userResult.getCode());
         System.out.println("msg = " + userResult.getMsg());
-        if (userResult.getCode() != StatusCode.SUCCESS_CODE) {
+        if (!"200".equalsIgnoreCase(userResult.getCode())) {
             throw new UsernameNotFoundException("用户:" + username + ",不存在!");
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
@@ -47,13 +46,13 @@ public class UserServiceDetail implements UserDetailsService {
         System.out.println("=============");
         System.out.println("userVo = " + userVo.toString());
         System.out.println("=============");
-        Result<List<RoleVo>> roleResult = roleService.getRoleByUserId(userVo.getId());
+        ApiResponse<List<RoleVo>> roleResult = roleService.getRoleByUserId(userVo.getId());
         System.out.println("======查找用户(" + userVo.getId() + ")角色======");
         System.out.println("code = " + roleResult.getCode());
         System.out.println("msg = " + roleResult.getMsg());
         System.out.println("roleResult = " + roleResult.toString());
         System.out.println("size = " + roleResult.getData().size());
-        if (roleResult.getCode() == StatusCode.SUCCESS_CODE) {
+        if ("200".equalsIgnoreCase(userResult.getCode())) {
             List<RoleVo> roleVoList = roleResult.getData();
             for (RoleVo role : roleVoList) {
                 System.out.println("name = " + role.getName());

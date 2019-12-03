@@ -1,6 +1,6 @@
 package com.egrand.wfw.oauth.security.service;
 
-import com.egrand.wfw.oauth.api.vo.Result;
+import com.egrand.commons.lang.model.ApiResponse;
 import com.egrand.wfw.oauth.api.vo.RoleVo;
 import com.egrand.wfw.oauth.security.service.impl.RoleServiceImpl;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -17,5 +17,5 @@ import java.util.List;
 @FeignClient(value = "service-hi", fallback = RoleServiceImpl.class)
 public interface RoleService {
     @GetMapping("role/getRoleByUserId/{userId}")
-    Result<List<RoleVo>> getRoleByUserId(@PathVariable("userId") Integer userId);
+    ApiResponse<List<RoleVo>> getRoleByUserId(@PathVariable("userId") Integer userId);
 }
