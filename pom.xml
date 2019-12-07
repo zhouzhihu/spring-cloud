@@ -21,13 +21,11 @@
         <module>egrand-wfw-config</module>
         <module>egrand-wfw-turbine</module>
         <module>egrand-wfw-zipkin</module>
-        <module>egrand-wfw-auth</module>
-        <module>egrand-wfw-auth-api</module>
         <module>egrand-wfw-zuul</module>
         <module>egrand-wfw-oauth2</module>
-        <module>egrand-wfw-oauth2-api</module>
         <module>egrand-wfw-oauth2-user</module>
-        <module>egrand-wfw-ram</module>
+        <module>egrand-provider-api</module>
+        <module>egrand-provider</module>
     </modules>
 
     <properties>
@@ -36,14 +34,19 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.egrand.wfw</groupId>
-                <artifactId>egrand-wfw-auth-api</artifactId>
+                <groupId>com.egrand.commons</groupId>
+                <artifactId>egrand-commons-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.egrand.commons</groupId>
-                <artifactId>egrand-commons-lang</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <artifactId>egrand-security-feign</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.egrand.commons</groupId>
+                <artifactId>egrand-commons-base</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.egrand.wfw</groupId>

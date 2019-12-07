@@ -1,4 +1,4 @@
-package com.egrand.wfw.oauth.user.security;
+package com.egrand.provider.ram.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ public class ResourceServerConfigurer extends ResourceServerConfigurerAdapter {
     }
 
     private String[] uris() {
-        String[] uris = {"/swagger-resources/**", "/swagger-ui.html", "/v2/**", "/webjars/**", "/resources/**", "/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs", "/open/**","/user/**"};
+        String[] uris = {"/swagger-resources/**", "/swagger-ui.html", "/v2/**", "/webjars/**", "/resources/**", "/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs", "/open/**","/user/query/**", "/role/query/**"};
         if (this.whiteList.length > 0) {
             String[] re = new String[uris.length + this.whiteList.length];
             System.arraycopy(uris, 0, re, 0, uris.length);

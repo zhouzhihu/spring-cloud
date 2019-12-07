@@ -1,10 +1,10 @@
 package com.egrand.wfw.oauth.security.service.impl;
 
-import com.egrand.commons.lang.model.ApiResponse;
-import com.egrand.wfw.oauth.api.vo.RoleVo;
-import com.egrand.wfw.oauth.api.vo.UserVo;
-import com.egrand.wfw.oauth.security.service.RoleService;
-import com.egrand.wfw.oauth.security.service.UserService;
+import com.egrand.commons.base.model.RestResponse;
+import com.egrand.provider.ram.api.model.vo.RoleVo;
+import com.egrand.provider.ram.api.model.vo.UserVo;
+import com.egrand.provider.ram.api.service.RoleService;
+import com.egrand.provider.ram.api.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,10 +29,12 @@ public class UserServiceDetail implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("======查找用户======");
         System.out.println("userService = " + userService);
-        ApiResponse<UserVo> userResult = userService.findByUsername(username);
-        System.out.println("code = " + userResult.getCode());
-        System.out.println("msg = " + userResult.getMsg());
-        if (!"200".equalsIgnoreCase(userResult.getCode())) {
+        RestResponse<UserVo> userResult = userService.findByUsername(username);
+        System.out.println("success = " + userResult.isSuccess());
+        System.out.println("errorCode = " + userResult.getErrorCode());
+        System.out.println("errorMsg = " + userResult.getErrorMsg());
+        System.out.println("data = " + userResult.getData());
+        if (!userResult.isSuccess()) {
             throw new UsernameNotFoundException("用户:" + username + ",不存在!");
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
@@ -46,17 +47,19 @@ public class UserServiceDetail implements UserDetailsService {
         System.out.println("=============");
         System.out.println("userVo = " + userVo.toString());
         System.out.println("=============");
-        ApiResponse<List<RoleVo>> roleResult = roleService.getRoleByUserId(userVo.getId());
+        RestResponse<List<RoleVo>> roleResult = roleService.getRoleByUserId(userVo.getId());
         System.out.println("======查找用户(" + userVo.getId() + ")角色======");
-        System.out.println("code = " + roleResult.getCode());
-        System.out.println("msg = " + roleResult.getMsg());
+        System.out.println("success = " + roleResult.isSuccess());
         System.out.println("roleResult = " + roleResult.toString());
+        System.out.println("data = " + roleResult.getData());
         System.out.println("size = " + roleResult.getData().size());
-        if ("200".equalsIgnoreCase(userResult.getCode())) {
+        if (roleResult.isSuccess()) {
             List<RoleVo> roleVoList = roleResult.getData();
+            System.out.println("roleVoList size = " + roleVoList.size());
             for (RoleVo role : roleVoList) {
-                System.out.println("name = " + role.getName());
-                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
+                System.out.println("name = " + role.getRoleName());
+                System.out.println("code = " + role.getRoleCode());
+                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getRoleCode());
                 grantedAuthorities.add(grantedAuthority);
             }
         }

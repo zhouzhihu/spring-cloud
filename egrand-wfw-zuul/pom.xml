@@ -29,10 +29,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zuul</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.egrand.commons</groupId>
-            <artifactId>egrand-commons-lang</artifactId>
-        </dependency>
         <!--zipkin的mq+mysql-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -77,10 +73,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.egrand.commons</groupId>
-            <artifactId>egrand-commons-lang</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

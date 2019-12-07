@@ -1,13 +1,14 @@
 package com.egrand.wfw.oauth.user.security.controller;
 
-import com.egrand.commons.lang.model.ApiResponse;
-import com.egrand.wfw.oauth.user.security.model.User;
-import com.egrand.wfw.oauth.user.security.model.UserLoginDto;
+import com.egrand.commons.base.model.RestResponse;
+import com.egrand.provider.ram.api.model.vo.UserVo;
+import com.egrand.provider.ram.api.service.UserService;
 import com.egrand.wfw.oauth.user.security.model.UserLoginParamDto;
-import com.egrand.wfw.oauth.user.security.service.UserService;
 import com.egrand.wfw.oauth.user.security.utils.BPwdEncoderUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.OAuth2ClientProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -43,44 +44,26 @@ public class UserController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @RequestMapping(value = "/registry",method = RequestMethod.POST)
-    public User createUser(@RequestParam("username") String username
-            , @RequestParam("password") String password) {
-        return userService.create(username,password);
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
-    @GetMapping("findByUsername/{username}")
-    public ApiResponse findByUsername(@PathVariable("username") String username){
-        User user = userService.findByUsername(username);
-        if (user == null){
-            return ApiResponse.failed("100","用户不存在");
-        }
-        return ApiResponse.success(user);
-    }
-
-    @GetMapping("findByUserId/{userId}")
-    public ApiResponse findById(@PathVariable("userId") Long userId){
-        User user =userService.findByUserId(userId);
-        if (user == null){
-            return ApiResponse.failed("100","用户不存在");
-        }
-        return ApiResponse.success(user);
-    }
-
-    @PostMapping("/loginByFeignClient")
-    public UserLoginDto login(@RequestParam("username") String username , @RequestParam("password") String password){
-        //参数判断，省略
-        return this.userService.login(username,password);
-    }
+//    @Autowired
+//    private ResourceOwnerPasswordResourceDetails resourceOwnerPasswordResourceDetails;
 
     @RequestMapping("/login")
     public ResponseEntity<OAuth2AccessToken> login(@Valid UserLoginParamDto loginDto, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors())
             throw new Exception("登录信息错误，请确认后再试");
-        User user = userService.findByUsername(loginDto.getUsername());
-        if (null == user)
+        RestResponse userResult = this.userService.findByUsername(loginDto.getUsername());
+        if(!userResult.isSuccess())
+            throw new Exception(userResult.getErrorMsg());
+        if (null == userResult.getData())
             throw new Exception("用户为空，出错了");
-        if (!BPwdEncoderUtil.matches(loginDto.getPassword(), user.getPassword().replace("{bcrypt}","")))
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(userResult.getData(),userVo);
+        if (!BPwdEncoderUtil.matches(loginDto.getPassword(), userVo.getPassword().replace("{bcrypt}","")))
             throw new Exception("密码不正确");
         String client_secret = oAuth2ClientProperties.getClientId()+":"+oAuth2ClientProperties.getClientSecret();
         client_secret = "Basic "+Base64.getEncoder().encodeToString(client_secret.getBytes());
@@ -109,26 +92,23 @@ public class UserController {
         return restTemplate.exchange(oAuth2ProtectedResourceDetails.getAccessTokenUri(), HttpMethod.POST,httpEntity,OAuth2AccessToken.class);
     }
 
-    @RequestMapping(value = "/getAccessToken", method = RequestMethod.POST)
-    public OAuth2AccessToken getAccessToken() throws Exception {
-        String tokenUri = "http://192.168.109.1:21031/oauth/token";
-
-        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
-
-        resourceDetails.setAccessTokenUri(tokenUri);
-        resourceDetails.setClientId("service-hi");
-        resourceDetails.setClientSecret("123456");
-        resourceDetails.setUsername("web_study");
-        resourceDetails.setPassword("wiki2012");
-        resourceDetails.setGrantType("password");
-        resourceDetails.setScope(Arrays.asList("server"));
-        resourceDetails.setAuthenticationScheme(AuthenticationScheme.form);
-
-        DefaultOAuth2ClientContext clientContext = new DefaultOAuth2ClientContext();
-
-        OAuth2RestTemplate oauth2RestTemplate = new OAuth2RestTemplate(resourceDetails, clientContext);
-
-        OAuth2AccessToken token = oauth2RestTemplate.getAccessToken();
-        return token;
-    }
+//    @RequestMapping(value = "/getAccessToken")
+//    public OAuth2AccessToken getAccessToken(@Valid UserLoginParamDto loginDto, BindingResult bindingResult) throws Exception {
+//        if (bindingResult.hasErrors())
+//            throw new Exception("登录信息错误，请确认后再试");
+//        RestResponse userResult = this.userService.findByUsername(loginDto.getUsername());
+//        if(!userResult.isSuccess())
+//            throw new Exception(userResult.getErrorMsg());
+//        if (null == userResult.getData())
+//            throw new Exception("用户为空，出错了");
+//        UserVo userVo = new UserVo();
+//        BeanUtils.copyProperties(userResult.getData(),userVo);
+//        if (!BPwdEncoderUtil.matches(loginDto.getPassword(), userVo.getPassword().replace("{bcrypt}","")))
+//            throw new Exception("密码不正确");
+//        resourceOwnerPasswordResourceDetails.setUsername(userVo.getUsername());
+//        resourceOwnerPasswordResourceDetails.setPassword(userVo.getPassword());
+//        OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resourceOwnerPasswordResourceDetails);
+//        OAuth2AccessToken token = oAuth2RestTemplate.getAccessToken();
+//        return token;
+//    }
 }

@@ -1,6 +1,6 @@
 package com.egrand.wfw.oauth.security.controller;
 
-import com.egrand.commons.lang.model.ApiResponse;
+import com.egrand.commons.base.model.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,11 +21,11 @@ public class LogoutController {
 
     @DeleteMapping(value = "/exit")
     public @ResponseBody
-    ApiResponse revokeToken(String access_token){
+    RestResponse revokeToken(String access_token){
         if (consumerTokenServices.revokeToken(access_token)){
-            return ApiResponse.success("注销成功");
+            return RestResponse.success("注销成功");
         }else {
-            return ApiResponse.failed("002", "注销失败");
+            return RestResponse.failed("002", "注销失败");
         }
     }
 }
