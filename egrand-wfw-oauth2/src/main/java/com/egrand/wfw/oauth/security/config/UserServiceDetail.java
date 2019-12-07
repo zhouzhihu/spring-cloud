@@ -1,4 +1,4 @@
-package com.egrand.wfw.oauth.security.service.impl;
+package com.egrand.wfw.oauth.security.config;
 
 import com.egrand.commons.base.model.RestResponse;
 import com.egrand.provider.ram.api.model.vo.RoleVo;

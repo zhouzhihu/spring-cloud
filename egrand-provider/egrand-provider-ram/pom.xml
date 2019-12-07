@@ -11,12 +11,4 @@
 
     <artifactId>egrand-provider-ram</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.egrand.commons</groupId>
-            <artifactId>egrand-commons-swagger</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
-
 </project>

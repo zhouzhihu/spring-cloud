@@ -1,6 +1,5 @@
 package com.egrand.wfw.oauth.security.config;
 
-import com.egrand.wfw.oauth.security.service.impl.UserServiceDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
