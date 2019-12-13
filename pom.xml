@@ -23,7 +23,6 @@
         <module>egrand-wfw-zipkin</module>
         <module>egrand-wfw-zuul</module>
         <module>egrand-wfw-oauth2</module>
-        <module>egrand-wfw-oauth2-user</module>
         <module>egrand-provider-api</module>
         <module>egrand-provider</module>
     </modules>
@@ -36,6 +35,11 @@
             <dependency>
                 <groupId>com.egrand.commons</groupId>
                 <artifactId>egrand-commons-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.egrand.commons</groupId>
+                <artifactId>egrand-commons-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

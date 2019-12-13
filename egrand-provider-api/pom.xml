@@ -14,18 +14,13 @@
     <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>egrand-provider-ram-api</module>
+        <module>egrand-cloud-ram-client</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>com.egrand.commons</groupId>
-            <artifactId>egrand-security-feign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.egrand.commons</groupId>
-            <artifactId>egrand-commons-base</artifactId>
+            <artifactId>egrand-commons-core</artifactId>
         </dependency>
     </dependencies>
-
 </project>
