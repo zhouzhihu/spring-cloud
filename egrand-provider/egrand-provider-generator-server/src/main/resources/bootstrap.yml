@@ -7,7 +7,7 @@ spring:
   cloud:
     config:
       uri: http://192.168.109.128:21011
-      name: generator
+      name: generator,redis,rabbitmq,common
       profile: dev
       label: master
       enabled: true
@@ -17,7 +17,7 @@ spring:
   cloud:
     config:
       uri: http://192.168.109.128:21011
-      name: generator
+      name: generator,redis,rabbitmq,common
       profile: test
       label: master
       enabled: true
@@ -27,7 +27,7 @@ spring:
   cloud:
     config:
       uri: http://192.168.109.128:21011
-      name: generator
+      name: generator,redis,rabbitmq,common
       profile: prod
       label: master
       enabled: true
