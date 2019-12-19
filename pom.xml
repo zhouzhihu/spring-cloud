@@ -47,11 +47,6 @@
                 <artifactId>egrand-commons-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.egrand.wfw</groupId>
-                <artifactId>egrand-wfw-component-cache4redis</artifactId>
-                <version>1.1-SNAPSHOT</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
     <repositories>
